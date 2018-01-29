@@ -1,4 +1,5 @@
-data<-read.csv("SYCdata.csv")
+setwd("C:/syc_mse")
+data<-read.csv("syc_production model fit/SYCdata.csv")
 data<-data[(rank(data$Year)),]
 plot(small_yellow_croaker_catch~Year,data=data)
 
