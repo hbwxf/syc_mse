@@ -1,7 +1,7 @@
 rm(list=ls())
 
 GeMS.dir <- "C:/GeMS"
-Cur.dir<-"C:/syc_mse/"
+Cur.dir<-"C:/syc_mse"
 
 source(file.path(GeMS.dir,"run_GeMS.R"))
 
@@ -18,3 +18,7 @@ OMNames<-c("Static","Time varying")
 
 run_GeMS(GeMSDir=GeMS.dir, CurDir=Cur.dir,
          CreateFolderNameList=OMNames)
+
+#==Lee Qi's stuff
+OMNames<-c("SYC_2_allGAMs_2","SYC_2_allGAMs_3")
+OMNames<-c("SYC_2_allGAMs_1")
