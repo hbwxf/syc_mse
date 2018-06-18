@@ -36,7 +36,7 @@ library(tibble)
 library(dplyr)
 
 catchtib <- tibble(Catch=FAOtot,Year=1950:2015,Source="Global") %>%
-				add_row(Catch=tCatch,Year=catchdat$Year,Source="ECS") %>%
+				add_row(Catch=tCatch,Year=catchdat$Year,Source="ECS")
 
 
 library(ggplot2)
