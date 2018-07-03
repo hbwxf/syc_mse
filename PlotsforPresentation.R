@@ -7,7 +7,7 @@ library(GeMS)
 
 ###########
 
-CTLNames<-CreateFolderName<-CreateFolderNameList<-c("SYC_1_noTV_1")
+CTLNames<-CreateFolderName<-CreateFolderNameList<-c("SYC_1_noTV_3")
 CreateFolderName<-CreateFolderNameList<-c("SYC_2_allGAMs_4")
 CreateFolderName<-CreateFolderNameList<-c("SYC_3_changeM_4")
 out <- Inout <- ReadCTLfile(CreateFolderNameList[1])
@@ -24,13 +24,20 @@ run_GeMS(CreateFolderNameList,runparallel=T,cores=3,silent=T)
 #########
 
 CTLNames <- CreateFolderNameList <- c("SYC_1_noTV_1","SYC_2_allGAMs_1","SYC_3_changeM_1")
-out <- Inout <- ReadCTLfile(CreateFolderNameList[2])
-ProductionModelOutput(Inout,CTLNames,MSEdir,plotNames=c("Time-Invariant", "Increasing M", "Decreasing M"))
+prodCTLNames<-c("SYC_1_noTV_1","SYC_1_noTV_1a",
+                "SYC_2_allGAMs_1","SYC_2_allGAMs_1a",
+                "SYC_3_changeM_1","SYC_3_changeM_1a")
+
+out <- Inout <- ReadCTLfile(prodCTLNames[1])
+ProductionModelOutput(Inout,prodCTLNames,MSEdir,
+                      plotNames=c("Time-Invariant", "Time-Invariant (est Init)",
+                                  "Increasing M", "Increasing M (est Init)", 
+                                  "Decreasing M", "Decreasing M (est Init)"))
 
 #########
 
 CreateFolderNameList <- c("SYC_2_allGAMs_2","SYC_2_allGAMs_2_1","SYC_2_allGAMs_2_2")
-out <- Inout <- ReadCTLfile(paste0(CreateFolderNameList[1],".csv"))
+out <- Inout <- ReadCTLfile(CreateFolderNameList[1])
 AgeStructureComp(Inout,RetroPeels=2,CreateFolderNameList,MSEdir)
 
 #########
@@ -39,16 +46,21 @@ CreateFolderNameList<-c("SYC_1_noTV_2","SYC_1_noTV_3","SYC_1_noTV_4",
 						"SYC_2_allGAMs_2","SYC_2_allGAMs_3","SYC_2_allGAMs_4",
 						"SYC_3_changeM_2","SYC_3_changeM_3","SYC_3_changeM_4")
 
-CTLNames<-CreateFolderNameList<-c("SYC_1_noTV_2","SYC_1_noTV_3",
+CreateFolderNameList<-c("SYC_1_noTV_1","SYC_2_allGAMs_1","SYC_3_changeM_1",
+                        "SYC_1_noTV_1a","SYC_2_allGAMs_1a","SYC_3_changeM_1a")
+
+
+CTLNames<-CTLNameList<-CreateFolderNameList<-c("SYC_1_noTV_2","SYC_1_noTV_3",
 						"SYC_2_allGAMs_2","SYC_2_allGAMs_3",
 						"SYC_3_changeM_2","SYC_3_changeM_3")
 
 
-out <- Inout <- ReadCTLfile(paste0(CreateFolderNameList[1],".csv"))
+out <- Inout <- ReadCTLfile(CreateFolderNameList[1])
 AgeStructureComp(Inout,RetroPeels=2,CreateFolderNameList,MSEdir,
                 plotNames=c("Time-Invariant; Fixed M", "Time-Invariant; Estimated M",
                             "Increasing M; Fixed M", "Increasing M; Estimated M",
-                            "Decreasing M; Fixed M", "Decreasing M; Estimated M"))
+                            "Decreasing M; Fixed M", "Decreasing M; Estimated M"),
+                Nruns=5)
 
 #run_GeMS(CreateFolderNameList,GeMSdir,MSEdir,runparallel=T,cores=8,GeMSops=list(silent=T))
 

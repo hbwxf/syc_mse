@@ -1,3 +1,5 @@
-syc_mse.Rproj
-Paper/*
-.DS_Store
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+Paper/
