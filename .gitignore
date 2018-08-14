@@ -4,3 +4,4 @@
 .Ruserdata
 Paper/
 *.DS_Store
+.Rproj.user
