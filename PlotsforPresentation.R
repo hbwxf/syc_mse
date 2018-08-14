@@ -13,6 +13,7 @@ CreateFolderName<-CreateFolderNameList<-c("SYC_3_changeM_4")
 out <- Inout <- ReadCTLfile(CreateFolderNameList[1])
 run_GeMS(CreateFolderNameList,MSEdir,silent=T)
 
+
 #########
 
 CreateFolderNameList<-c("SYC_1_noTV_1a","SYC_2_allGAMs_1a","SYC_3_changeM_1a")
@@ -20,6 +21,12 @@ CreateFolderNameList<-c("SYC_1_noTV_2","SYC_2_allGAMs_2","SYC_3_changeM_2")
 CreateFolderNameList<-c("SYC_1_noTV_3","SYC_2_allGAMs_3","SYC_3_changeM_3")
 CreateFolderNameList<-c("SYC_1_noTV_4","SYC_2_allGAMs_4","SYC_3_changeM_4")
 run_GeMS(CreateFolderNameList,runparallel=T,cores=3,silent=T)
+
+out <- Inout <- ReadCTLfile(CreateFolderNameList[1])
+ProductionModelOutput(Inout,CreateFolderNameList,MSEdir,
+                      plotNames=c("Time-Invariant",
+                                  "Increasing M", 
+                                  "Decreasing M"))
 
 #########
 
@@ -65,21 +72,35 @@ AgeStructureComp(Inout,RetroPeels=2,CreateFolderNameList,MSEdir,
 #run_GeMS(CreateFolderNameList,GeMSdir,MSEdir,runparallel=T,cores=8,GeMSops=list(silent=T))
 
 
-############
+######################
+# Age-structured plots
+######################
 
 CTLNames <- CreateFolderNameList<-c("SYC_1_noTV_2","SYC_1_noTV_3")
-CTLNames <- CreateFolderNameList<-c("SYC_2_allGAMs_2","SYC_2_allGAMs_3")
-CTLNames <- CreateFolderNameList<-c("SYC_3_changeM_2","SYC_3_changeM_3")
-CTLNames <- CreateFolderNameList<-c("SYC_3_changeM_2","SYC_3_changeM_3","SYC_3_changeM_4")
+out <- Inout <- ReadCTLfile(CreateFolderNameList[1])
+AgeStructureComp(Inout,RetroPeels=2,CreateFolderNameList,MSEdir,
+                 plotNames=c("Fixed M", "Estimated M"),
+                 Nruns=5)
 
-out <- Inout <- ReadCTLfile(paste0(CreateFolderNameList[1],".csv"))
-AgeStructureComp(Inout,RetroPeels=2,CreateFolderNameList,MSEdir)
+CTLNames <- CreateFolderNameList<-c("SYC_2_allGAMs_2","SYC_2_allGAMs_3")
+out <- Inout <- ReadCTLfile(CreateFolderNameList[1])
+AgeStructureComp(Inout,RetroPeels=2,CreateFolderNameList,MSEdir,
+                 plotNames=c("Fixed M", "Estimated M"),
+                 Nruns=5)
+
+CTLNames <- CreateFolderNameList<-c("SYC_3_changeM_2","SYC_3_changeM_3")
+out <- Inout <- ReadCTLfile(CreateFolderNameList[1])
+AgeStructureComp(Inout,RetroPeels=2,CreateFolderNameList,MSEdir,
+                 plotNames=c("Fixed M", "Estimated M"),
+                 Nruns=5)
 
 #############
 
 CreateFolderNameList<-c("SYC_1_noTV_5","SYC_2_allGAMs_5","SYC_3_changeM_5")
 out <- Inout <- ReadCTLfile(paste0(CreateFolderNameList[1],".csv"))
-AgeStructureComp(Inout,RetroPeels=2,CreateFolderNameList,MSEdir)
+AgeStructureComp(Inout,RetroPeels=2,CreateFolderNameList,MSEdir,
+                 plotNames=c("Fixed M", "Estimated M"),
+                 Nruns=5)
 
 ############
 
