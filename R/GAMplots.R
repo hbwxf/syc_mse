@@ -25,7 +25,7 @@ parnames<-c(expression(L[infinity]),
             expression(Maturity[95*'%'])
             )
 
-dat <- read_csv("SYC_params.csv")
+dat <- read_csv("Data/SYC_params.csv")
 
 dat_long <- dat %>%
 			gather(Parameter, Value, -Year, -tYear) %>%
