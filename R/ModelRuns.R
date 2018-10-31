@@ -46,7 +46,7 @@ prodCTLNames<-c("SYC_1_noTV_1",
                 "SYC_3_changeM_1")
 run_GeMS(prodCTLNames,runparallel=T,cores=3,silent=T)
 
-out <- Inout <- ReadCTLfile(prodCTLNames[1])
+out <- Inout <- ReadCTLfile(prodCTLNames[])
 ProductionModelOutput(Inout,prodCTLNames,MSEdir,
                       plotNames=c("Time-Invariant",
                                   "Increasing M",

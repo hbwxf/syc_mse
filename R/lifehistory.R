@@ -68,6 +68,7 @@ temp<-data[data$Species==use_spec[x] & !is.na(match(data$Large_marine_ecosystem,
 styr <- min(as.numeric(temp$End_study_date),na.rm=T)
 Fstyr<-styr-1
 endyr <- max(as.numeric(temp$End_study_date),na.rm=T)
+endyr <- 2014
 
 for(y in 1:length(unq_par)) {
   temp2<-temp[temp$Parameter_name==unq_par[y],]
