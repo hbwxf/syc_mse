@@ -1,5 +1,5 @@
 cd Box\ Sync/GeMS/General-MSE/syc_mse
-R
+rt
 
 plotdir <- file.path(getwd(),"Paper/Figures")
 library(tidyverse)
@@ -32,13 +32,15 @@ dat_long <- dat %>%
 			filter(Parameter%in%params) %>%
 			mutate(Parameter=factor(Parameter, levels = params))
 
-Mtib<-tibble(Value=c(rep(0.277333514,40),seq(from=0.277333514,to=0.2,length.out=55),0.2,0.2,0.2),Parameter="M",tYear=filter(dat_long,Parameter=="M")$tYear)  %>%
-			mutate(Parameter=factor(Parameter, levels = params))
+Mtib <- dat %>%
+			gather(Parameter, Value, -Year, -tYear) %>%
+			filter(Parameter%in%"M_change") %>%
+			mutate(Parameter=factor("M", levels = params))
 
 levels(dat_long$Parameter) <- parnames
-levels(Mtib$Parameter) <- parnames
+#levels(Mtib$Parameter) <- parnames
 
-tiff(file.path(plotdir,"Fig2_ParamPlots.tiff"),width=6,height=4,res=600,units="in")
+tiff(file.path(plotdir,"Fig2_ParamPlots.tiff"),width=6,height=4,res=300,units="in")
 ggplot(data=dat_long,mapping=aes(x=tYear,y=Value)) +
 	geom_line() +
 	facet_wrap(~Parameter, scales="free_y",nrow=2,ncol=4,labeller="label_parsed") +
@@ -47,25 +49,27 @@ ggplot(data=dat_long,mapping=aes(x=tYear,y=Value)) +
 	scale_x_continuous(breaks=as.numeric(round(quantile(dat_long$tYear)))[c(1,3,5)]) +
 	geom_line(data=Mtib,
 			  mapping=aes(x=tYear,y=Value)) +
-	theme(strip.background = element_blank())
+	theme(strip.background = element_blank(),plot.margin=unit(c(.1,.5,.1,.1),"cm"))
 dev.off()
 
 ############
 
-params <- c("Rzero_noTV","Rzero_allGAMs","Rzero_changeM")
+rparams <- c("Rzero_noTV","Rzero_allGAMs","Rzero_changeM")
 
-dat_long <- dat %>%
+rdat_long <- dat %>%
 			gather(Parameter, Value, -Year, -tYear) %>%
-			filter(Parameter%in%params) %>%
-			mutate(Parameter=factor(Parameter, levels = params))
+			filter(Parameter%in%rparams) %>%
+			mutate(Parameter=factor(Parameter, levels = rparams))
 
-ggplot(data=dat_long,mapping=aes(x=tYear,y=Value,colour=Parameter)) +
+tiff(file.path(plotdir,"SupFigS2_Recruitment.tiff"),width=5,height=4,res=300,units="in")
+ggplot(data=rdat_long,mapping=aes(x=tYear,y=Value,colour=Parameter)) +
 	geom_line() +
-#	theme(text = element_text(size=20)) +
-	scale_colour_discrete(name  ="Operating Model",
-                            breaks=params,
+	scale_colour_discrete(name ="Operating Model",
+                            breaks=rparams,
                             labels=c("Constant", "Increasing M", "Decreasing M")) +
-	ylab("Virgin Recruitment")
+	ylab("Virgin Recruitment") +
+	xlab("Year")
+dev.off()
 
 ###########
 
@@ -79,6 +83,6 @@ dat_long <- dat %>%
 
 ggplot(data=dat_long,mapping=aes(x=Year,y=Value)) +
 	geom_line() +
-	facet_wrap(~Parameter) +
+	facet_wrap(~Parameter, scales="free_y") +
 	theme(text = element_text(size=20))
 

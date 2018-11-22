@@ -1,6 +1,6 @@
 library(GeMS)
 
-plotdir <- file.path(getwd(),"Paper","Figures","Fig4_BioRec.tiff")
+plotdir <- file.path(getwd(),"..","Paper","Figures","Fig4_BioRec.tiff")
 
 colmed <-adjustcolor(RColorBrewer::brewer.pal(3,"Set1"),alpha=.75)
 

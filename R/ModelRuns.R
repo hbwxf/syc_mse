@@ -7,7 +7,7 @@ library(GeMS)
 
 ###########
 
-CTLNameList<-CTLName<-CTLNames<-CreateFolderName<-CreateFolderNameList<-c("SYC_1_noTV_2")
+CTLNameList<-CTLName<-CTLNames<-CreateFolderName<-CreateFolderNameList<-c("SYC_1_noTV_1")
 CTLNameList<-CTLName<-CTLNames<-CreateFolderName<-CreateFolderNameList<-c("SYC_2_allGAMs_2")
 CTLNameList<-CTLName<-CTLNames<-CreateFolderName<-CreateFolderNameList<-c("SYC_3_changeM_2")
 out <- Inout <- ReadCTLfile(CreateFolderNameList[1])
@@ -16,37 +16,24 @@ run_GeMS(CreateFolderNameList,MSEdir,silent=T)
 
 #########
 
-CreateFolderNameList<-c("SYC_1_noTV_1","SYC_2_allGAMs_1","SYC_3_changeM_1")
 CreateFolderNameList<-c("SYC_1_noTV_2","SYC_2_allGAMs_2","SYC_3_changeM_2")
 CreateFolderNameList<-c("SYC_1_noTV_3","SYC_2_allGAMs_3","SYC_3_changeM_3")
-CreateFolderNameList<-c("SYC_1_noTV_4","SYC_2_allGAMs_4","SYC_3_changeM_4")
 run_GeMS(CreateFolderNameList,runparallel=T,cores=3,silent=T)
 
 out <- Inout <- ReadCTLfile(CreateFolderNameList[1])
-ProductionModelOutput(Inout,CreateFolderNameList,MSEdir,
+AgeStructureComp(Inout,RetroPeels=1CreateFolderNameList,MSEdir,
                       plotNames=c("Time-Invariant",
                                   "Increasing M", 
                                   "Decreasing M"))
 
 #########
 
-CTLNameList<-prodCTLNames <- CreateFolderNameList <- c("SYC_1_noTV_1","SYC_2_allGAMs_1","SYC_3_changeM_1")
-prodCTLNames<-c("SYC_1_noTV_1","SYC_1_noTV_1a",
-                "SYC_2_allGAMs_1","SYC_2_allGAMs_1a",
-                "SYC_3_changeM_1","SYC_3_changeM_1a")
-
-out <- Inout <- ReadCTLfile(prodCTLNames[1])
-ProductionModelOutput(Inout,prodCTLNames,MSEdir,
-                      plotNames=c("Time-Invariant", "Time-Invariant (est Init)",
-                                  "Increasing M", "Increasing M (est Init)", 
-                                  "Decreasing M", "Decreasing M (est Init)"))
-
 prodCTLNames<-c("SYC_1_noTV_1",
                 "SYC_2_allGAMs_1",
                 "SYC_3_changeM_1")
 run_GeMS(prodCTLNames,runparallel=T,cores=3,silent=T)
 
-out <- Inout <- ReadCTLfile(prodCTLNames[])
+out <- Inout <- ReadCTLfile(prodCTLNames[1])
 ProductionModelOutput(Inout,prodCTLNames,MSEdir,
                       plotNames=c("Time-Invariant",
                                   "Increasing M",
@@ -58,7 +45,7 @@ ProductionModelOutput(Inout,prodCTLNames,MSEdir,
 
 CreateFolderNameList <- c("SYC_2_allGAMs_2","SYC_2_allGAMs_2_1","SYC_2_allGAMs_2_2")
 out <- Inout <- ReadCTLfile(CreateFolderNameList[1])
-AgeStructureComp(Inout,RetroPeels=2,CreateFolderNameList,MSEdir)
+AgeStructureComp(Inout,RetroPeels=1,CreateFolderNameList,MSEdir)
 
 #########
 

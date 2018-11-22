@@ -1,4 +1,5 @@
 dir.MSE <- file.path(getwd(),"Data")
+plotdir <- file.path(getwd(),"Paper/Figures/SupFigS1_Catches.tiff")
 
 library(tidyverse)
 
@@ -9,13 +10,13 @@ FAOtot <- c(63800,81500,82100,79900,80300,82100,110300,124300,105200,118000,1313
 catchtib <- tibble(Catch=FAOtot,Year=1950:2015,Source="Global") %>%
 				add_row(Catch=tCatch,Year=catchdat$Year,Source="ECS")
 
-
-
+tiff(plotdir,width=6,height=4,units="in",res=300)
 ggplot(data = catchdat) + 
   geom_col(mapping = aes(x = Year, y = Larimichthys.polyactis)) +
   scale_y_continuous(name = "Catch (t)") +
 	theme_classic()
 #  scale_fill_continuous(name = "Catch (mt)")
+dev.off()
 
 ggplot(data = catchtib) + 
   geom_col(mapping = aes(x = Year, y = Catch,fill=Source),position="identity") +

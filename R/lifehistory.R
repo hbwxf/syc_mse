@@ -72,6 +72,7 @@ endyr <- 2014
 
 for(y in 1:length(unq_par)) {
   temp2<-temp[temp$Parameter_name==unq_par[y],]
+  if(unq_par[y]=="F") temp2<-temp2[-which(temp2$End_study_date==max(temp2$End_study_date)),]
   styr <- min(as.numeric(temp$End_study_date),na.rm=T)
   if(nrow(temp2)>0)
   {
@@ -86,7 +87,7 @@ for(y in 1:length(unq_par)) {
    mod<-gam(Value~s(End_study_date,k=3),data=temp2)
    incol<-'grey'
 
-   if(unq_par[y]=="F") styr<-styr-1
+   if(unq_par[y]=="F") styr<-Fstyr
    tempnew <- list(End_study_date=seq(from=styr, to = endyr))
    stindex <- styr - min(as.numeric(data$End_study_date),na.rm=T)+1
    endindex <- endyr - min(as.numeric(data$End_study_date),na.rm=T)+1
@@ -165,8 +166,13 @@ predpars[1,stindex:endindex,(y+2)] <- A95.preds$fit
 # Selectivity Parameters
 #-----------------------
 seldat <- read_csv(file.path(dir.syc,"Data/Selectivity.csv"))
+Sstindex <- stindex-1
 
-MeshSeries <- list(Mesh_mm=seq(from=100, to=40, length=(endyr-(styr-1)+1)))
+# Selectivity stops changing in 2004
+Fupyrs<-length(Sstindex:47)
+#MeshSeries <- list(Mesh_mm=c(seq(from=80, to=40, length=Fupyrs),seq(from=40, to=35,length=(length(Sstindex:endindex)-Fupyrs))))
+MeshSeries <- list(Mesh_mm=c(seq(from=80, to=40, length=Fupyrs),rep(40,length=(length(Sstindex:endindex)-Fupyrs))))
+
 
 L50.gam <- gam(L50_cm~s(Mesh_mm,k=3), data=seldat)
 L50.preds <- predict(L50.gam,newdata=MeshSeries,se=TRUE)
@@ -174,13 +180,13 @@ L50.preds <- predict(L50.gam,newdata=MeshSeries,se=TRUE)
 L95.gam <- gam(L95_cm~s(Mesh_mm,k=3), data=seldat)
 L95.preds <- predict(L95.gam,newdata=MeshSeries,se=TRUE)
 
-stindex <- stindex-1
+paste0("c(",paste(c(rep(L50.preds$fit[1],44),L50.preds$fit),collapse=","),")")
+paste0("c(",paste(c(rep(L95.preds$fit[1],44),L95.preds$fit),collapse=","),")")
 
-predpars[1,stindex:endindex,(y+3)] <- L50.preds$fit
-predpars[1,stindex:endindex,(y+4)] <- L95.preds$fit
+predpars[1,Sstindex:endindex,(y+3)] <- L50.preds$fit
+predpars[1,Sstindex:endindex,(y+4)] <- L95.preds$fit
 
 write.csv(predpars[1,,],file.path(dir.syc,"Data/SYC_GAMoutput.csv"))
-
 
 
 

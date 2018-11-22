@@ -1,5 +1,5 @@
 library(GeMS)
-plotdir <- file.path(getwd(),"Paper","Figures","Fig5_NatM.tiff")
+plotdir <- file.path(getwd(),"..","Paper","Figures","Fig5_NatM.tiff")
 p1 <- PlotParam("NatM",OMfile="SYC_1_noTV_3",EMvec="SYC_1_noTV_3",plotnames="EM Estimate",dolegend=T,xlab='n',yaxt='n')
 p2 <- PlotParam("NatM",OMfile="SYC_2_allGAMs_3",EMvec="SYC_2_allGAMs_3")
 p3 <- PlotParam("NatM",OMfile="SYC_3_changeM_3",EMvec="SYC_2_allGAMs_3")
