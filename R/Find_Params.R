@@ -4,10 +4,10 @@ rt
 # 2014 is (OM$InitYear-1)
 library(GeMS)
 
-dir.MSE <- file.path(getwd(),"..","Data")
+dir.dat <- file.path(getwd(),"..","Data")
 oldpar <- par(no.readonly=T)
 
-MasterOMname <- "SYC_3_allGAMs_1"
+MasterOMname <- "SYC_2_allGAMs_2"
 
 ctlfilename <- MasterOMname
 CTLfile <- ReadCTLfile(ctlfilename)
@@ -18,17 +18,17 @@ yrchangeFS <- 44
 
 out<- newOM <- CTLfile
 
-paramdat <- read.csv(file.path(dir.MSE,"SYC_params.csv"))
+paramdat <- read.csv(file.path(dir.dat,"SYC_params.csv"))
 firstyear <- min(paramdat$tYear)
 
-catchdat <- read.csv(file.path(dir.MSE,"SYC_catches.csv"),header=T)
+catchdat <- read.csv(file.path(dir.dat,"SYC_catches.csv"),header=T)
 tCatch <- catchdat$Larimichthys.polyactis
 Cyears <- catchdat$Year
 Cyears <- Cyears[Cyears %in% paramdat$tYear]
 Cindex <- (Cyears-firstyear)+1
 
 # Missing 1982 and 2009
-effortdat <- read.csv(file.path(dir.MSE,"ECS_Effort.csv"))
+effortdat <- read.csv(file.path(dir.dat,"ECS_Effort.csv"))
 Eyears <- effortdat$Year
 Eyears <- Eyears[Eyears %in% paramdat$tYear]
 tEffort <- effortdat$Kilowatts[effortdat$Year %in% Eyears]
@@ -37,7 +37,7 @@ Eindex <- (Eyears-firstyear)+1
 tYears <- unique(c(Cyears,Eyears))
 Nyears <- length(tYears)
 
-LenComps <- read.csv(file.path(dir.MSE,"FakeLenComps.csv"))
+LenComps <- read.csv(file.path(dir.dat,"FakeLenComps.csv"))
 tLenFreq <- cbind((LenComps[,1]-firstyear+1),t(apply(LenComps[,-1],1,function(x) x/sum(x))))
 
 # paramvec <- c(sqrt(log(RzeroN)), log(sel50n), log(sel95n), log(q))
@@ -61,7 +61,7 @@ tLenFreq <- cbind((LenComps[,1]-firstyear+1),t(apply(LenComps[,-1],1,function(x)
 
 
 miniGeMS <- function(out) {
-{	set.seed(88888)
+{	set.seed(123)
 	Nsim			<-out$OM$Nsim			# number of simulations to do in the MSE
 	SimYear		<-out$OM$SimYear			# total number of years in simulation
 	InitYear		<-out$OM$InitYear			# year in which MSE starts (i.e. the number of years of data available for initial assessment)
