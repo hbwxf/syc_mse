@@ -45,7 +45,7 @@ counted<-count_entries(species=spec_name,parameter="Linf")
 
 #==plot species with more entries than X (here 3)
 use_spec<-spec_name[which(as.numeric(counted)>3)]
-unq_par<-c("Linf","k","t0","M","a","b","F")
+unq_par<-c("Linf","k","t0","M","a","b")
 parnames<-c(expression(L[infinity]),expression(Kappa),expression(t[0]),
             "M", expression(alpha), expression(beta),
             "F",expression(Mat[50]),expression(Mat[95]))
@@ -54,21 +54,20 @@ use_LME<-c("East China Sea","Yellow Sea","East China Sea, Yellow Sea")
 
 predpars <- array(dim=c(length(use_spec), 
                         (max(as.numeric(data$End_study_date),na.rm=T)-min(as.numeric(data$End_study_date),na.rm=T)+1),
-                        (length(unq_par)+4)),
+                        (length(unq_par)+2)),
                   dimnames = list(use_spec,
                                   seq(from=min(as.numeric(data$End_study_date),na.rm=T),to=max(as.numeric(data$End_study_date),na.rm=T)),
-                                  c(unq_par,"Mat50","Mat95","L50","L95")))
+                                  c(unq_par,"Mat50","Mat95")))
 
 
 
 x<-1
-tiff(file.path(plotdir,"Fig1_LifeHistoryPlots.tiff"),width=5,height=5,res=300,units="in")
-par(mfrow=c(3,3),mar=c(.1,2.5,.1,.1),oma=c(4,0,1,1))
+tiff(file.path(plotdir,"Fig1_LifeHistoryPlots.tiff"),width=8,height=4,res=250,units="in")
+par(mfrow=c(2,4),mar=c(.1,2.5,.1,.1),oma=c(4,0,1,1))
 temp<-data[data$Species==use_spec[x] & !is.na(match(data$Large_marine_ecosystem,use_LME)),]
 styr <- min(as.numeric(temp$End_study_date),na.rm=T)
 Fstyr<-styr-1
 endyr <- max(as.numeric(temp$End_study_date),na.rm=T)
-endyr <- 2014
 
 for(y in 1:length(unq_par)) {
   temp2<-temp[temp$Parameter_name==unq_par[y],]
@@ -87,7 +86,7 @@ for(y in 1:length(unq_par)) {
    mod<-gam(Value~s(End_study_date,k=3),data=temp2)
    incol<-'grey'
 
-   if(unq_par[y]=="F") styr<-Fstyr
+ #  if(unq_par[y]=="F") styr<-Fstyr
    tempnew <- list(End_study_date=seq(from=styr, to = endyr))
    stindex <- styr - min(as.numeric(data$End_study_date),na.rm=T)+1
    endindex <- endyr - min(as.numeric(data$End_study_date),na.rm=T)+1
@@ -111,7 +110,7 @@ for(y in 1:length(unq_par)) {
   }     
   if(nrow(temp2)<1)
     plot(0,type='n',xlim=c(styr,endyr),xaxt='n',yaxt='n',bty='n')
-  if(y %in% 7:9)
+  if(y %in% 5:8)
     axis(side=1)
   styr <- min(as.numeric(temp$End_study_date),na.rm=T)
   }
@@ -165,26 +164,26 @@ predpars[1,stindex:endindex,(y+2)] <- A95.preds$fit
 #-----------------------
 # Selectivity Parameters
 #-----------------------
-seldat <- read_csv(file.path(dir.syc,"Data/Selectivity.csv"))
-Sstindex <- stindex-1
-
-# Selectivity stops changing in 2004
-Fupyrs<-length(Sstindex:47)
-#MeshSeries <- list(Mesh_mm=c(seq(from=80, to=40, length=Fupyrs),seq(from=40, to=35,length=(length(Sstindex:endindex)-Fupyrs))))
-MeshSeries <- list(Mesh_mm=c(seq(from=80, to=40, length=Fupyrs),rep(40,length=(length(Sstindex:endindex)-Fupyrs))))
-
-
-L50.gam <- gam(L50_cm~s(Mesh_mm,k=3), data=seldat)
-L50.preds <- predict(L50.gam,newdata=MeshSeries,se=TRUE)
-
-L95.gam <- gam(L95_cm~s(Mesh_mm,k=3), data=seldat)
-L95.preds <- predict(L95.gam,newdata=MeshSeries,se=TRUE)
-
-paste0("c(",paste(c(rep(L50.preds$fit[1],44),L50.preds$fit),collapse=","),")")
-paste0("c(",paste(c(rep(L95.preds$fit[1],44),L95.preds$fit),collapse=","),")")
-
-predpars[1,Sstindex:endindex,(y+3)] <- L50.preds$fit
-predpars[1,Sstindex:endindex,(y+4)] <- L95.preds$fit
+#seldat <- read_csv(file.path(dir.syc,"Data/Selectivity.csv"))
+#Sstindex <- stindex-1
+#
+## Selectivity stops changing in 2004
+#Fupyrs<-length(Sstindex:47)
+##MeshSeries <- list(Mesh_mm=c(seq(from=80, to=40, length=Fupyrs),seq(from=40, to=35,length=(length(Sstindex:endindex)-Fupyrs))))
+#MeshSeries <- list(Mesh_mm=c(seq(from=80, to=40, length=Fupyrs),rep(40,length=(length(Sstindex:endindex)-Fupyrs))))
+#
+#
+#L50.gam <- gam(L50_cm~s(Mesh_mm,k=3), data=seldat)
+#L50.preds <- predict(L50.gam,newdata=MeshSeries,se=TRUE)
+#
+#L95.gam <- gam(L95_cm~s(Mesh_mm,k=3), data=seldat)
+#L95.preds <- predict(L95.gam,newdata=MeshSeries,se=TRUE)
+#
+#paste0("c(",paste(c(rep(L50.preds$fit[1],44),L50.preds$fit),collapse=","),")")
+#paste0("c(",paste(c(rep(L95.preds$fit[1],44),L95.preds$fit),collapse=","),")")
+#
+#predpars[1,Sstindex:endindex,(y+3)] <- L50.preds$fit
+#predpars[1,Sstindex:endindex,(y+4)] <- L95.preds$fit
 
 write.csv(predpars[1,,],file.path(dir.syc,"Data/SYC_GAMoutput.csv"))
 

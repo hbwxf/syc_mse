@@ -3,26 +3,28 @@ rt
 
 # 2014 is (OM$InitYear-1)
 library(GeMS)
+library(dplyr)
 
 dir.dat <- file.path(getwd(),"..","Data")
 oldpar <- par(no.readonly=T)
 
-MasterOMname <- "SYC_2_allGAMs_2"
+MasterOMname <- "SYC_2_allGAMs_1"
+MasterOMname <- "SYC_3_changeM_1"
 
 ctlfilename <- MasterOMname
 CTLfile <- ReadCTLfile(ctlfilename)
 CTLfile$OM$Nsim <- 1
 
-yrchangeLH <- 45 #i.e. c(rep(vec[1],(yrchangeLH-1)),vec,rev(vec)[1])
-yrchangeFS <- 44
+yrchangeLH <- 46 #i.e. c(rep(vec[1],(yrchangeLH-1)),vec,rev(vec)[1])
+yrchangeFS <- 45
 
 out<- newOM <- CTLfile
 
 paramdat <- read.csv(file.path(dir.dat,"SYC_params.csv"))
 firstyear <- min(paramdat$tYear)
 
-catchdat <- read.csv(file.path(dir.dat,"SYC_catches.csv"),header=T)
-tCatch <- catchdat$Larimichthys.polyactis
+catchdat <- read.csv(file.path(dir.dat,"ECS_SYC_catches.csv"),header=T)
+tCatch <- catchdat$Catch
 Cyears <- catchdat$Year
 Cyears <- Cyears[Cyears %in% paramdat$tYear]
 Cindex <- (Cyears-firstyear)+1
@@ -38,7 +40,9 @@ tYears <- unique(c(Cyears,Eyears))
 Nyears <- length(tYears)
 
 LenComps <- read.csv(file.path(dir.dat,"FakeLenComps.csv"))
+LenComps <- LenComps %>% filter(Year<=2013)
 tLenFreq <- cbind((LenComps[,1]-firstyear+1),t(apply(LenComps[,-1],1,function(x) x/sum(x))))
+
 
 # paramvec <- c(sqrt(log(RzeroN)), log(sel50n), log(sel95n), log(q))
  paramvec <- c(sqrt(log(CTLfile$OM$RzeroN))[Cindex],log(CTLfile$OM$sel50n)[yrchangeFS:CTLfile$OM$SimYear],log(CTLfile$OM$sel95n)[yrchangeFS:CTLfile$OM$SimYear],log(6E-7))
@@ -426,7 +430,7 @@ Find_params <-function(paramvec,
 
 	SimYear <- OMname$OM$SimYear
 	
-	logRvec <- paramvec[seq_along(Cindex)]
+	logRvec <- paramvec[seq_along(Cind)]
 	paredparams <- paramvec[-(seq_along(logRvec))]
 	logsel50n <- paredparams[seq_along(FSyr:SimYear)]
 	paredparams <- paredparams[-(seq_along(logsel50n))]
@@ -439,8 +443,12 @@ Find_params <-function(paramvec,
 	qpar <- exp(logq)
 	HistoricalF <- qpar*trueEffort
 
-	smoothingLL <- smoothLL(Rvec,5E-6) + smoothLL(sel50,12) + smoothLL(sel95,12)
-	
+	#OM 2
+#	smoothingLL <- smoothLL(Rvec,1E-5) + smoothLL(sel50,20) + smoothLL(sel95,20)
+
+	#OM 3
+	smoothingLL <- smoothLL(Rvec,1E-6) + smoothLL(sel50,1) + smoothLL(sel95,1)
+
 	InitYr <- OMname$OM$InitYear
 	
 	OMname$OM$RzeroN <- c(rep(Rvec[1],(InitYr-length(Rvec))),Rvec,rev(Rvec)[1])
@@ -459,7 +467,7 @@ Find_params <-function(paramvec,
 	catchLL <- sum(((log(estCatch) - log(trueCatch))^2)/log(newOM$OM$CatchCVn*newOM$OM$CatchCVn+1))
 	
 	estLenFreq <- temp$LenFreq[trueLenFreq[,1],]
-	LenFreqLL <- -.01*sum(log(estLenFreq)*trueLenFreq[,-1],na.rm=T)
+	LenFreqLL <- -10*sum(log(estLenFreq)*trueLenFreq[,-1],na.rm=T)
 	
 	totLL <- catchLL + smoothingLL + LenFreqLL
 	if(is.na(totLL)) {totLL <- 9E20}
@@ -516,14 +524,58 @@ for(i in 1:100000) {
 	plot(newOM$OM$RzeroN,type="l",xlab="Year",ylab="Rzero",ylim=range(newOM$OM$RzeroN))
 }
 
-paramvec<-res$par
+
+SimYear <- newOM$OM$SimYear
+
+logRvec <- res$par[seq_along(Cindex)]
+paredparams <- res$par[-(seq_along(logRvec))]
+logsel50n <- paredparams[seq_along(yrchangeFS:SimYear)]
+paredparams <- paredparams[-(seq_along(logsel50n))]
+logsel95n <- paredparams[seq_along(yrchangeFS:SimYear)]
+logq <- rev(res$par)[1]
+	
+Rvec <- exp(logRvec^2)
+sel50 <- exp(logsel50n)
+sel95 <- exp(logsel95n)
+qpar <- exp(logq)
+HistoricalF <- qpar*tEffort
+
+#OM 2
+smoothingLL <- smoothLL(Rvec,1E-5) + smoothLL(sel50,20) + smoothLL(sel95,20)
+#smoothingLL <- smoothLL(Rvec,0) + smoothLL(sel50,0) + smoothLL(sel95,0)
+
+#OM 3
+#	smoothingLL <- smoothLL(Rvec,1E-6) + smoothLL(sel50,1) + smoothLL(sel95,1)
+
+InitYr <- newOM$OM$InitYear
+
+newOM$OM$RzeroN <- c(rep(Rvec[1],(InitYr-length(Rvec))),Rvec,rev(Rvec)[1])
+
+# Assuming initial F in 50s was .05 of F_2000
+InitF <- .05*HistoricalF[22]
+newOM$OM$HistoricalFn <- c(rep(InitF,(yrchangeFS-1)),seq(from=InitF, to=HistoricalF[1],length=(Eindex[1]-yrchangeFS+1)),HistoricalF[-1])
+
+newOM$OM$sel50n <- c(rep(sel50[1],(yrchangeFS-1)),sel50)
+newOM$OM$sel95n <- c(rep(sel95[1],(yrchangeFS-1)),sel95)
+
+temp<-miniGeMS(newOM)
+
+estCatch <- temp$trueCatchN[Cindex]
+if(length(estCatch) != length(tCatch)) {stop("Nyears of OM does not match Nyears of observed catch.")}
+catchLL <- sum(((log(estCatch) - log(tCatch))^2)/log(newOM$OM$CatchCVn*newOM$OM$CatchCVn+1))
+
+estLenFreq <- temp$LenFreq[tLenFreq[,1],]
+LenFreqLL <- -10*sum(log(estLenFreq)*tLenFreq[,-1],na.rm=T)
+
+totLL <- catchLL + smoothingLL + LenFreqLL
+
 
 par(mfcol=c(2,4),mar=c(.2,2,.2,.1))
 for(y in 1:4) {
 
     	barplot(estLenFreq[y,],beside=T,yaxt='n',xaxt='n')
     	if(y==1) mtext(side=2, "Estimated")
-        barplot(trueLenFreq[y,-1],beside=T,yaxt='n',xaxt='n')
+        barplot(tLenFreq[y,-1],beside=T,yaxt='n',xaxt='n')
         if(y==1) mtext(side=2,"Truth")
     }
 
@@ -533,11 +585,25 @@ plot(newOM$OM$sel50n,type="l",ylab="Sel 50")
 plot(newOM$OM$sel95n,type="l",ylab="Sel 95")
 plot(newOM$OM$HistoricalFn,type="l",ylab="Historical F")
 
-Nrec<-length(res$par)-1
-InitYr <- CTLfile$OM$InitYear
-Rvec <- exp(res$par[1:Nrec]^2)
+
+#####
+#Nrec<-length(res$par)-1
+#InitYr <- CTLfile$OM$InitYear
+#Rvec <- exp(res$par[1:Nrec]^2)
 paste0("c(",paste(c(rep(Rvec[1],(InitYr-Nyears)),Rvec[1:Nrec],rep(Rvec[Nrec],(CTLfile$OM$SimYear-InitYr))),collapse=","),")")
 paste0("c(",paste(res$par[1:Nrec],collapse=","),")")
+cat(paste(c(rep(Rvec[1],(InitYr-Nyears)),Rvec,rep(rev(Rvec)[1],(CTLfile$OM$SimYear-InitYr))),collapse="\n"))
+
+cat(paste(newOM$OM$RzeroN,collapse="\n"))
+cat(paste(newOM$OM$sel50n,collapse="\n"))
+cat(paste(newOM$OM$sel95n,collapse="\n"))
+cat(paste(newOM$OM$HistoricalFn,collapse="\n"))
+
+
+paste0("c(",paste(newOM$OM$RzeroN,collapse=","),")")
+paste0("c(",paste(newOM$OM$sel50n,collapse=","),")")
+paste0("c(",paste(newOM$OM$sel95n,collapse=","),")")
+paste0("c(",paste(newOM$OM$HistoricalFn,collapse=","),")")
 cat(paste(c(rep(Rvec[1],(InitYr-Nyears)),Rvec,rep(rev(Rvec)[1],(CTLfile$OM$SimYear-InitYr))),collapse="\n"))
 
 

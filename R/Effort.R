@@ -5,7 +5,7 @@ library(tidyverse)
 library(readxl)
 
 effortfile <- "Data/vessels_fishmari_province.xlsx"
-ECSProvinces <- c("Zhejiang","Fujian Province","Jiangsu Province")
+ECSProvinces <- c("Zhejiang","Fujian Province","Jiangsu Province","Shanghai","Shandong")
 
 hp2kw <- function(datf) {
 			temp<-dim(datf)[2]
@@ -56,7 +56,8 @@ for(y in missingYears) {
 }
 
 ECSeffort <- temp %>%
-				arrange(Year)
+				arrange(Year) %>%
+				filter(Year>=1986 & Year<=2013)
 
 
 ggplot(ECSeffort) +

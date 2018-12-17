@@ -1,4 +1,4 @@
-cd Box\ Sync/GeMS/General-MSE/syc_mse
+cd ~/Box\ Sync/China_LQ/syc_mse
 rt
 
 plotdir <- file.path(getwd(),"Paper/Figures")
