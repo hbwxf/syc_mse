@@ -1,3 +1,6 @@
+#cd ~/Box\ Sync/China_LQ/syc_mse/Data
+#rt
+
 library(readr)
 library(tidyr)
 library(dplyr)

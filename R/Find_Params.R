@@ -9,7 +9,7 @@ dir.dat <- file.path(getwd(),"..","Data")
 oldpar <- par(no.readonly=T)
 
 MasterOMname <- "SYC_2_allGAMs_1"
-MasterOMname <- "SYC_3_changeM_1"
+#MasterOMname <- "SYC_3_changeM_1"
 
 ctlfilename <- MasterOMname
 CTLfile <- ReadCTLfile(ctlfilename)
@@ -444,10 +444,10 @@ Find_params <-function(paramvec,
 	HistoricalF <- qpar*trueEffort
 
 	#OM 2
-#	smoothingLL <- smoothLL(Rvec,1E-5) + smoothLL(sel50,20) + smoothLL(sel95,20)
+	smoothingLL <- smoothLL(Rvec,4E-5) + smoothLL(sel50,20) + smoothLL(sel95,40)
 
 	#OM 3
-	smoothingLL <- smoothLL(Rvec,1E-6) + smoothLL(sel50,1) + smoothLL(sel95,1)
+#	smoothingLL <- smoothLL(Rvec,1E-6) + smoothLL(sel50,1) + smoothLL(sel95,1)
 
 	InitYr <- OMname$OM$InitYear
 	
@@ -541,7 +541,7 @@ qpar <- exp(logq)
 HistoricalF <- qpar*tEffort
 
 #OM 2
-smoothingLL <- smoothLL(Rvec,1E-5) + smoothLL(sel50,20) + smoothLL(sel95,20)
+smoothingLL <- smoothLL(Rvec,5E-5) + smoothLL(sel50,20) + smoothLL(sel95,40)
 #smoothingLL <- smoothLL(Rvec,0) + smoothLL(sel50,0) + smoothLL(sel95,0)
 
 #OM 3

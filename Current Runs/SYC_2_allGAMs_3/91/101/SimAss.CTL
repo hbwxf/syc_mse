@@ -17,7 +17,7 @@
 #estimate natural mortality? if positive, number indicates phase, if negative, not estimated 
 1 
 #natural mortality (used as starting value if estimated) 
-0.2 
+0.5038094 
 #Allow M to vary over time? 1 = yes, 0 = no 
 -2 
 #selectivity 50% time-varying? 

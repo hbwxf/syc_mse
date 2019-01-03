@@ -18,10 +18,10 @@ run_GeMS(CreateFolderNameList,MSEdir,silent=T)
 
 CreateFolderNameList<-c("SYC_1_noTV_2","SYC_2_allGAMs_2","SYC_3_changeM_2")
 CreateFolderNameList<-c("SYC_1_noTV_3","SYC_2_allGAMs_3","SYC_3_changeM_3")
-run_GeMS(CreateFolderNameList,runparallel=T,cores=3,silent=T)
+run_GeMS(CreateFolderNameList,runparallel=T,cores=2,silent=T)
 
 out <- Inout <- ReadCTLfile(CreateFolderNameList[1])
-AgeStructureComp(Inout,RetroPeels=1CreateFolderNameList,MSEdir,
+AgeStructureComp(Inout,RetroPeels=1,CreateFolderNameList,MSEdir,
                       plotNames=c("Time-Invariant",
                                   "Increasing M", 
                                   "Decreasing M"))
