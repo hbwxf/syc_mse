@@ -5,3 +5,4 @@
 Paper/
 *.DS_Store
 .Rproj.user
+*.sublime-workspace

@@ -48,7 +48,7 @@ use_spec<-spec_name[which(as.numeric(counted)>3)]
 unq_par<-c("Linf","k","t0","M","a","b")
 parnames<-c(expression(L[infinity]),expression(Kappa),expression(t[0]),
             "M", expression(alpha), expression(beta),
-            "F",expression(Mat[50]),expression(Mat[95]))
+            expression(Mat[50]),expression(Mat[95]))
 
 use_LME<-c("East China Sea","Yellow Sea","East China Sea, Yellow Sea")
 

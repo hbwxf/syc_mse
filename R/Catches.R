@@ -1,6 +1,11 @@
 cd ~/Box\ Sync/China_LQ/AquaFish
 rt
 
+
+dir.data <- file.path("~/Box\ Sync/China_LQ/syc_mse","Data")
+plotdir <- file.path("~/Box\ Sync/China_LQ/syc_mse","Paper/Figures/SupFigS1_Catches.tiff")
+
+
 library(tidyverse)
 library(readxl)
 
@@ -71,11 +76,15 @@ FAOtot <- c(63800,81500,82100,79900,80300,82100,110300,124300,105200,118000,1313
 catchtib <- tibble(Catch=FAOtot,Year=1950:2015,Source="FAO Global") %>%
 				add_row(Catch=SYCtotal$Catch,Year=SYCtotal$Year,Source="China") %>%
 				add_row(Catch=ECScatch$Catch,Year=ECScatch$Year,Source="East China Sea & Yellow Sea")
+
+
+tiff(plotdir,width=9,height=3,units="in",res=300)
 ggplot(data = catchtib) + 
   geom_col(mapping = aes(x = Year, y = Catch,fill=Source),position="identity") +
   theme(text = element_text(size=20)) +
   scale_y_continuous(name = "Catch (t)") +
   theme_classic()
+dev.off()
 
  ECScatch2use <- ECScatch %>%
  				 filter(Year>=1986 & Year<=2013)
