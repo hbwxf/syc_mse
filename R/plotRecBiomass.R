@@ -1,6 +1,6 @@
 library(GeMS)
 
-plotdir <- file.path(getwd(),"..","Paper","Figures","Fig4_BioRec.tiff")
+plotdir <- file.path(getwd(),"..","Paper","Figures","Fig3_BioRec.tiff")
 
 colmed <-adjustcolor(RColorBrewer::brewer.pal(3,"Set1"),alpha=.75)
 
@@ -11,15 +11,15 @@ plotRecBiomass <- function(OMfile,EMvec,Rec_ylims=NA,Spbio_ylims=NA,toplot=F,plo
 	if(toplot) {
 		if(is.na(EMnames[1])) EMnames <- EMvec
 
-		Spbio_truth <- apply(OMres$TrueSpbio,2,median,na.rm=T)
-		Spbio_estimates <- apply(OMres$EstSpbio,c(2,3),median,na.rm=T)
+		Spbio_truth <- apply(OMres$TrueSpbio,2,median,na.rm=T)[OMlist$OM$start_assessment:OMlist$OM$SimYear]
+		Spbio_estimates <- apply(OMres$EstSpbio,c(2,3),median,na.rm=T)[(OMlist$OM$start_assessment:OMlist$OM$SimYear),]
 		if(is.na(Spbio_ylims[1])) {Spbio_ylims <- range(c(Spbio_truth,Spbio_estimates),na.rm=T)}
 
-		plot(0,type='n',ylim=Spbio_ylims,xlim=c(1,OMlist$OM$SimYear),xlab="",xaxt='n',...)
+		plot(0,type='n',ylim=Spbio_ylims,xlim=c(OMlist$OM$start_assessment,OMlist$OM$SimYear),xlab="",xaxt='n',...)
 
-		lines(y=Spbio_truth,x=1:OMlist$OM$SimYear,lwd=2,lty=2)
+		lines(y=Spbio_truth,x=OMlist$OM$start_assessment:OMlist$OM$SimYear,lwd=2,lty=2)
 		for(em in seq_along(EMvec)) {
-			lines(y=Spbio_estimates[,em],x=1:OMlist$OM$SimYear,lwd=2,col=clrs[em])
+			lines(y=Spbio_estimates[,em],x=OMlist$OM$start_assessment:OMlist$OM$SimYear,lwd=2,col=clrs[em])
 		}
 		if(plotlegend) {
 			legend("topleft",c("Truth",EMnames),lwd=2,col=c("black",clrs),lty=c(2,rep(1,length(EMvec))))
@@ -27,15 +27,15 @@ plotRecBiomass <- function(OMfile,EMvec,Rec_ylims=NA,Spbio_ylims=NA,toplot=F,plo
 		}
 
 
-		Rec_truth <- apply(OMres$TrueRec,2,median,na.rm=T)
-		Rec_estimates <- apply(OMres$Recruitment,c(2,3),median,na.rm=T)
+		Rec_truth <- apply(OMres$TrueRec,2,median,na.rm=T)[OMlist$OM$start_assessment:OMlist$OM$SimYear]
+		Rec_estimates <- apply(OMres$Recruitment,c(2,3),median,na.rm=T)[(OMlist$OM$start_assessment:(OMlist$OM$SimYear-1)),]
 
 		if(is.na(Rec_ylims[1])) {Rec_ylims <- range(c(Rec_truth,Rec_estimates),na.rm=T)}
 
-		plot(0,type='n',ylim=Rec_ylims,xlim=c(1,OMlist$OM$SimYear),xlab="",...)		
-		lines(y=Rec_truth,x=1:OMlist$OM$SimYear,lwd=2,lty=2)
+		plot(0,type='n',ylim=Rec_ylims,xlim=c(OMlist$OM$start_assessment,OMlist$OM$SimYear),xlab="",...)		
+		lines(y=Rec_truth,x=OMlist$OM$start_assessment:OMlist$OM$SimYear,lwd=2,lty=2)
 		for(em in seq_along(EMvec)) {
-			lines(y=Rec_estimates[,em],x=1:(OMlist$OM$SimYear-1),lwd=2,col=clrs[em])
+			lines(y=Rec_estimates[,em],x=OMlist$OM$start_assessment:(OMlist$OM$SimYear-1),lwd=2,col=clrs[em])
 		}
 		if(plotlegend) {
 			mtext("Recruitment",side=2,xpd=NA,line=2.5)
