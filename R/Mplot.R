@@ -9,11 +9,11 @@ ylims <- range(p1$truth,p2$truth,p3$truth,
 			   p1$estimates$Quant05,p2$estimates$Quant05,p3$estimates$Quant05
 				)
 
-tiff(plotdir,,width=6,height=4,units="in",res=300)
+tiff(plotdir,,width=6,height=3,units="in",res=300)
 par(mfrow=c(1,3),oma=c(4,4,.2,.2),mar=c(.2,.2,.2,.2))
 
 PlotParam("NatM",OMfile="SYC_1_noTV_3",EMvec="SYC_1_noTV_3",plotnames="Estimate",ylims=ylims,dolegend=T,legpos="bottomleft",ylab='',xlab='')
-mtext(side=2,"Natural Mortality",line=2)
+mtext(side=2,expression(paste("Natural Mortality (yr"^"-1",")")),line=2)
 PlotParam("NatM",OMfile="SYC_2_allGAMs_3",EMvec="SYC_2_allGAMs_3",ylims=ylims,yaxt='n',ylab='',xlab='')
 PlotParam("NatM",OMfile="SYC_3_changeM_3",EMvec="SYC_3_changeM_3",ylims=ylims,yaxt='n',ylab='',xlab='')
 
