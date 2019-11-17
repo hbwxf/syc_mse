@@ -1,3 +1,4 @@
+Current\ Runs/plots/
 .Rproj.user
 .Rhistory
 .RData
@@ -7,3 +8,5 @@ Paper/
 .Rproj.user
 *.sublime-workspace
 Reviewer_comments.txt
+**/*.png
+**/*.tiff

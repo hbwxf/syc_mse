@@ -1,5 +1,5 @@
 cd ~/Box\ Sync/China_LQ/lifehistory
-rt
+rd
 
 ############
 # For SYC GAM parameter plots
@@ -17,7 +17,7 @@ library(readr)
 
 data <- read_excel("Database China Life History.xlsx")
 
-dir.syc <- "~/Box\ Sync/China_LQ/syc_mse"
+dir.syc <- "../syc_mse"
 plotdir<-file.path(dir.syc,"Paper/Figures")
 
 #==change scientific notation
@@ -62,7 +62,8 @@ predpars <- array(dim=c(length(use_spec),
 
 
 x<-1
-tiff(file.path(plotdir,"Fig1_LifeHistoryPlots.tiff"),width=8,height=4,res=250,units="in")
+#tiff(file.path(plotdir,"Fig1_LifeHistoryPlots.tiff"),width=170,height=85,res=400,units="mm")
+pdf(file.path(plotdir,"Fig1_LifeHistoryPlots.pdf"),width=7,height=3.5)
 par(mfrow=c(2,4),mar=c(.1,2.5,.1,.1),oma=c(4,0,1,1))
 temp<-data[data$Species==use_spec[x] & !is.na(match(data$Large_marine_ecosystem,use_LME)),]
 styr <- min(as.numeric(temp$End_study_date),na.rm=T)
@@ -150,7 +151,7 @@ axis(side=2)
 
 
 par(mfrow=c(1,1))
-mtext(side=1, "Year", line=2.5)
+mtext(side=1, "Year", line=3)
 dev.off()
 
 

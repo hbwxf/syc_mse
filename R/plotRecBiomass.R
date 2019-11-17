@@ -1,6 +1,6 @@
 library(GeMS)
 
-plotdir <- file.path(getwd(),"..","Paper","Figures","Fig3_BioRec.tiff")
+plotdir <- file.path(getwd(),"..","Paper","Figures","Fig3_BioRec.pdf")
 
 colmed <-adjustcolor(RColorBrewer::brewer.pal(3,"Set1"),alpha=.75)
 colq <-adjustcolor(RColorBrewer::brewer.pal(3,"Set1"),alpha=.3)
@@ -122,7 +122,8 @@ Spbioylims <- range(c(0,
 Fylims <- range(c(0,
 				 6),na.rm=T)
 
-tiff(plotdir,width=6,height=6,units="in",res=300)
+#tiff(plotdir,width=7,height=7,units="in",res=800, compression = "lzw")
+pdf(plotdir,width=7,height=7)
 par(mfcol=c(3,3),oma=c(4,4,3,.2),mar=c(.2,.2,.2,.2))
 res1 <- plotRecBiomass(OM1file,EM1list,plotname="Time-Invariant",Rec_ylims=Recylims,Spbio_ylims=Spbioylims,F_ylims=Fylims,toplot=T,plotlegend=T,EMnames=c("Fixed M","Estimated M"))
 res2 <- plotRecBiomass(OM2file,EM2list,plotname="Increasing M",Rec_ylims=Recylims,Spbio_ylims=Spbioylims,F_ylims=Fylims,toplot=T,yaxt='n')
